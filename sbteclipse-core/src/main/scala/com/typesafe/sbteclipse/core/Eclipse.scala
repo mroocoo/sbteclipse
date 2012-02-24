@@ -288,7 +288,9 @@ private object Eclipse {
     withSource: Boolean)(
       configuration: Configuration)(
         implicit state: State) = {
-    def moduleToFile(key: TaskKey[UpdateReport], p: (Artifact, File) => Boolean = (_, _) => true) =
+    def moduleToFile(key: TaskKey[UpdateReport], p: (Artifact, File) => Boolean = (a, _) => {
+      (a.`type` /== "src") && (a.`type` /== "doc")
+    }) =
       evaluateTask(key in configuration, ref) map { updateReport =>
         val moduleToFile =
           for {
